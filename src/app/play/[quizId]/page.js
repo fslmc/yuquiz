@@ -115,7 +115,7 @@ export default function PlayQuiz() {
           <div className="flex flex-col items-center justify-center h-64 space-y-4 text-center text-red-500">
             <PartyPopper size={64} strokeWidth={1.5} />
             <h2 className="text-4xl md:text-5xl font-bold">Quiz complete! 🎉</h2>
-            <p className="text-lg text-white">You've answered all the questions.</p>
+            <p className="text-lg text-white">You&apos;ve answered all the questions.</p>
           </div>
         )}
 
