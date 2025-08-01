@@ -1,6 +1,7 @@
 // src/app/api/attempts/[attemptId]/next-question/route.js
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { finishAttempt } from '../finish/finishAttempt.js';
 
 export async function GET(request, { params }) {
   let awaitedParams;
@@ -25,6 +26,7 @@ export async function GET(request, { params }) {
     .sort((a, b) => a.sequence - b.sequence)[0];
 
   if (!nextQuestion) {
+    await finishAttempt(attemptId);
     return NextResponse.json({ done: true }, { status: 200 });
   }
 
