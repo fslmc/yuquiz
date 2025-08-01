@@ -54,12 +54,21 @@ export default function Profile() {
         <p className="mb-4">
           <strong>Email:</strong> {session.email || 'N/A'}
         </p>
-        <button
-          onClick={handleSignOut}
-          className="mt-6 w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 rounded-lg shadow-lg transition-colors"
-        >
-          Logout
-        </button>
+        {/* Buttons are now grouped in a flex container for a clean layout */}
+        <div className="mt-6 flex flex-col space-y-4">
+          <a
+            href="/profile/my_quiz"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white text-center font-semibold py-3 rounded-lg shadow-lg transition-colors"
+          >
+            My Quizzes
+          </a>
+          <button
+            onClick={handleSignOut}
+            className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 rounded-lg shadow-lg transition-colors"
+          >
+            Logout
+          </button>
+        </div>
       </div>
     </div>
   );
