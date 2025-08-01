@@ -5,6 +5,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 import prisma from "@/lib/prisma";
 
+// The NextAuth function now returns an object with `handlers`, `auth`, `signIn`, and `signOut`.
+// We destructure these directly for easy use.
 export const {
   handlers: { GET, POST },
   auth,
@@ -25,7 +27,6 @@ export const {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        // Your existing authorize logic
         try {
           if (!credentials?.email || !credentials?.password) {
             throw new Error("Email and password are required");
@@ -63,7 +64,6 @@ export const {
     }),
   ],
   callbacks: {
-    // Your existing callbacks
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
