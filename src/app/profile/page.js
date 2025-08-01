@@ -2,6 +2,7 @@
 
 import { useSession } from '@/app/hooks/useSession';
 import { signOut } from 'next-auth/react';
+import Link from 'next/link';
 
 export default function Profile() {
   const { session, loading } = useSession();
