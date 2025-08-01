@@ -56,12 +56,12 @@ export default function Profile() {
         </p>
         {/* Buttons are now grouped in a flex container for a clean layout */}
         <div className="mt-6 flex flex-col space-y-4">
-          <a
+          <Link
             href="/profile/my_quiz"
             className="w-full bg-blue-600 hover:bg-blue-700 text-white text-center font-semibold py-3 rounded-lg shadow-lg transition-colors"
           >
             My Quizzes
-          </a>
+          </Link>
           <button
             onClick={handleSignOut}
             className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 rounded-lg shadow-lg transition-colors"
