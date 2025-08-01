@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from '@/app/hooks/useSession';
+import Link from 'next/link';
 
 
 export default function CreateQuiz() {
@@ -123,7 +124,12 @@ const handleSubmit = async (e) => {
             ))}
             <button type="button" onClick={addQuestion} className="bg-red-700 hover:bg-red-800 px-4 py-2 rounded text-white">+ Add Question</button>
           </div>
+          <div className='space-x-1'>
           <button type="submit" className="bg-red-600 hover:bg-red-700 px-6 py-2 rounded text-white font-bold">Save Quiz</button>
+            <Link href="/quizzes" className="bg-red-600 hover:bg-red-700 px-6 py-2 rounded text-white font-bold">
+            Back
+        </Link> 
+          </div>
         </form>
       </div>
     </div>

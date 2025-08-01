@@ -16,7 +16,7 @@ export default function Navbar() {
         <a href="#about" className="hover:text-red-400 transition-colors">
           About
         </a>
-        <a href="#play" className="hover:text-red-400 transition-colors">
+        <a href="/quizzes" className="hover:text-red-400 transition-colors">
           Play
         </a>
         {!loading && !session && (
