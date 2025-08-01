@@ -6,3 +6,11 @@ Content-Type: application/json
   "password": "SecurePass123!",
   "name": "Test User"
 }
+
+POST /api/auth/signin/credentials
+Content-Type: application/json
+
+{
+  "email": "2@ex.com",
+  "password": "2"
+}

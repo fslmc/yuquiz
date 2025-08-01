@@ -1,9 +1,16 @@
+// src/auth.js
+
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 import prisma from "@/lib/prisma";
 
-export const authConfig = {
+export const {
+  handlers: { GET, POST },
+  auth,
+  signIn,
+  signOut,
+} = NextAuth({
   secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
@@ -18,6 +25,7 @@ export const authConfig = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+        // Your existing authorize logic
         try {
           if (!credentials?.email || !credentials?.password) {
             throw new Error("Email and password are required");
@@ -55,6 +63,7 @@ export const authConfig = {
     }),
   ],
   callbacks: {
+    // Your existing callbacks
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
@@ -78,9 +87,4 @@ export const authConfig = {
     error: "/auth/error",
   },
   debug: process.env.NODE_ENV === "development",
-};
-
-const { GET, POST, auth, signIn, signOut } = NextAuth(authConfig);
-
-export { GET, POST, auth, signIn, signOut };
-export default authConfig;
+});
