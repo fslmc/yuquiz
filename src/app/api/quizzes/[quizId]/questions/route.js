@@ -3,25 +3,30 @@ import prisma from '@/lib/prisma';
 
 // GET all questions for a quiz
 export async function GET(request, { params }) {
-  // Defensive: Ensure params and quizId are present
-  if (!params || !params.quizId) {
+  let awaitedParams;
+  try {
+    awaitedParams = await params;
+  } catch (e) {
+    awaitedParams = params;
+  }
+
+  const quizId = awaitedParams?.quizId;
+  if (!quizId || typeof quizId !== 'string') {
     return NextResponse.json(
-      { error: 'Missing quizId in route parameters' },
+      { error: 'Missing or invalid quizId in route parameters' },
       { status: 400 }
     );
   }
-  const quizId = params.quizId;
 
-  // Optionally: Validate quizId format (UUID)
-  if (typeof quizId !== 'string' || !quizId.match(/^[\w-]{10,}$/)) {
+  // Simplified validation to allow for short IDs like '1'
+  if (quizId.trim() === '') {
     return NextResponse.json(
-      { error: 'Invalid quizId format' },
+      { error: 'Invalid quizId format: must be a non-empty string' },
       { status: 400 }
     );
   }
 
   try {
-    // Optionally: Check if quiz exists
     const quiz = await prisma.quiz.findUnique({ where: { id: quizId } });
     if (!quiz) {
       return NextResponse.json(
@@ -40,15 +45,12 @@ export async function GET(request, { params }) {
     });
     return NextResponse.json(questions);
   } catch (error) {
-    // Prisma known error handling
     if (error.code === 'P2023') {
-      // Invalid ID format
       return NextResponse.json(
         { error: 'Invalid quizId format' },
         { status: 400 }
       );
     }
-    // Log and return generic error
     console.error('Failed to fetch questions:', error);
     return NextResponse.json(
       { error: `Failed to fetch questions: ${error.message}` },
@@ -59,19 +61,25 @@ export async function GET(request, { params }) {
 
 // CREATE a new question with answer options
 export async function POST(request, { params }) {
-  // Defensive: Ensure params and quizId are present
-  if (!params || !params.quizId) {
+  let awaitedParams;
+  try {
+    awaitedParams = await params;
+  } catch (e) {
+    awaitedParams = params;
+  }
+
+  const quizId = awaitedParams?.quizId;
+  if (!quizId || typeof quizId !== 'string') {
     return NextResponse.json(
-      { error: 'Missing quizId in route parameters' },
+      { error: 'Missing or invalid quizId in route parameters' },
       { status: 400 }
     );
   }
-  const quizId = params.quizId;
 
-  // Optionally: Validate quizId format (UUID)
-  if (typeof quizId !== 'string' || !quizId.match(/^[\w-]{10,}$/)) {
+  // Simplified validation to allow for short IDs like '1'
+  if (quizId.trim() === '') {
     return NextResponse.json(
-      { error: 'Invalid quizId format' },
+      { error: 'Invalid quizId format: must be a non-empty string' },
       { status: 400 }
     );
   }
@@ -86,7 +94,28 @@ export async function POST(request, { params }) {
     );
   }
 
-  const { text, sequence, points, questionTypeId, answerOptions } = body;
+  let { text, sequence, points, questionTypeId, answerOptions } = body;
+
+  // Convert string values from the payload to numbers if they exist
+  if (typeof sequence === 'string') {
+    sequence = parseInt(sequence, 10);
+    if (isNaN(sequence)) {
+      return NextResponse.json(
+        { error: 'sequence must be a number or a string that can be parsed to a number' },
+        { status: 400 }
+      );
+    }
+  }
+
+  if (typeof points === 'string') {
+    points = parseFloat(points);
+    if (isNaN(points)) {
+      return NextResponse.json(
+        { error: 'points must be a number or a string that can be parsed to a number' },
+        { status: 400 }
+      );
+    }
+  }
 
   // Validate required fields and types
   if (typeof text !== 'string' || !text.trim()) {
@@ -139,7 +168,6 @@ export async function POST(request, { params }) {
   }
 
   try {
-    // Optionally: Check if quiz exists
     const quiz = await prisma.quiz.findUnique({ where: { id: quizId } });
     if (!quiz) {
       return NextResponse.json(
@@ -148,7 +176,6 @@ export async function POST(request, { params }) {
       );
     }
 
-    // Optionally: Check if questionType exists
     const questionType = await prisma.questionType.findUnique({ where: { id: questionTypeId } });
     if (!questionType) {
       return NextResponse.json(
@@ -187,15 +214,12 @@ export async function POST(request, { params }) {
 
     return NextResponse.json(newQuestion, { status: 201 });
   } catch (error) {
-    // Prisma known error handling
     if (error.code === 'P2003') {
-      // Foreign key constraint failed
       return NextResponse.json(
         { error: 'Invalid quizId or questionTypeId: related record does not exist' },
         { status: 400 }
       );
     }
-    // Log and return generic error
     console.error('Failed to create question:', error);
     return NextResponse.json(
       { error: `Failed to create question: ${error.message}` },

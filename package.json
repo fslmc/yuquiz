@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "seed": "node prisma/seeders/seedQuestionTypes.js"
   },
   "dependencies": {
     "@prisma/client": "^6.13.0",
@@ -25,8 +26,5 @@
     "eslint-config-next": "15.4.4",
     "prisma": "^6.13.0",
     "tailwindcss": "^4"
-  },
-  "prisma": {
-    "seed": "node prisma/seeders/seedQuestionTypes.js"
   }
 }

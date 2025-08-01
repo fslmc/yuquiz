@@ -8,7 +8,7 @@ export default function Home() {
         <p className="text-lg sm:text-xl text-gray-200 max-w-2xl text-center mb-8">
           Challenge your friends, test your knowledge, and climb the leaderboard on the ultimate quiz game platform!
         </p>
-        <a href="#play" className="bg-red-600 hover:bg-red-700 text-white font-semibold px-8 py-3 rounded-lg shadow-lg transition-colors text-lg">Start Playing</a>
+        <a href="/quizzes" className="bg-red-600 hover:bg-red-700 text-white font-semibold px-8 py-3 rounded-lg shadow-lg transition-colors text-lg">Start Playing</a>
       </main>
 
     </div>
