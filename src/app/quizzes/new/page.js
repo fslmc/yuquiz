@@ -71,7 +71,7 @@ const handleSubmit = async (e) => {
   }
 
   // 3) finally, navigate into the fully-built quiz
-  router.push(`/quizzes/${quiz.id}`)
+  router.push(`/quizzes`)
 }
 
 
