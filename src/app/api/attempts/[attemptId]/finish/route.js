@@ -1,27 +1,16 @@
 // src/app/api/attempts/[attemptId]/finish/route.js
 import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import { finishAttempt } from './finishAttempt';
 
 export async function POST(request, { params }) {
-      let awaitedParams;
   try {
-    awaitedParams = await params;
-  } catch {
-    awaitedParams = params;
-  }
-  const attemptId = awaitedParams.attemptId;
-  // Calculate score
-  const responses = await prisma.questionResponse.findMany({ where: { attemptId } });
-  const correct = responses.filter(r => r.isCorrect).length;
-  const score = correct; // Or sum points if you want
-
-  const finishedAttempt = await prisma.quizAttempt.update({
-    where: { id: attemptId },
-    data: {
-      finishedAt: new Date(),
-      score,
+    const attemptId = params.attemptId;
+    if (!attemptId) {
+      return NextResponse.json({ error: 'Missing attemptId parameter' }, { status: 400 });
     }
-  });
-
-  return NextResponse.json(finishedAttempt);
+    const finishedAttempt = await finishAttempt(attemptId);
+    return NextResponse.json(finishedAttempt);
+  } catch (error) {
+    return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
+  }
 }
