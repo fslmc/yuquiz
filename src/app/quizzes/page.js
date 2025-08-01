@@ -24,7 +24,7 @@ export default function QuizList() {
                 <div className="font-semibold text-lg">{quiz.title}</div>
                 <div className="text-gray-400">{quiz.desc}</div>
               </div>
-              <Link href={`/quizzes/${quiz.id}`} className="bg-red-500 hover:bg-red-700 px-3 py-1 rounded text-white">Play</Link>
+              <Link href={`/play/${quiz.id}`} className="bg-red-500 hover:bg-red-700 px-3 py-1 rounded text-white">Play</Link>
             </li>
           ))}
         </ul>

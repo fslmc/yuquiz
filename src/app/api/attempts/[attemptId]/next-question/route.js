@@ -3,7 +3,14 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
 export async function GET(request, { params }) {
-  const attemptId = params.attemptId;
+  let awaitedParams;
+  try {
+    awaitedParams = await params;
+  } catch {
+    awaitedParams = params;
+  }
+
+  const attemptId = awaitedParams.attemptId;
   // Find the attempt and its quiz
   const attempt = await prisma.quizAttempt.findUnique({
     where: { id: attemptId },
@@ -20,6 +27,11 @@ export async function GET(request, { params }) {
   if (!nextQuestion) {
     return NextResponse.json({ done: true }, { status: 200 });
   }
+
+  console.log('QuizAttempt:', attemptId);
+console.log('Quiz ID:', attempt.quiz.id);
+console.log('Questions:', attempt.quiz.questions.map(q => q.id));
+console.log('Responses:', attempt.responses.map(r => r.questionId));
 
   return NextResponse.json(nextQuestion);
 }

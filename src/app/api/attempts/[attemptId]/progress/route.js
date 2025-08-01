@@ -3,7 +3,13 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
 export async function GET(request, { params }) {
-  const attemptId = params.attemptId;
+      let awaitedParams;
+  try {
+    awaitedParams = await params;
+  } catch {
+    awaitedParams = params;
+  }
+  const attemptId = awaitedParams.attemptId;
   const attempt = await prisma.quizAttempt.findUnique({
     where: { id: attemptId },
     include: {

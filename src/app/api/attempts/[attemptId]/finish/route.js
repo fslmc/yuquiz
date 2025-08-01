@@ -3,7 +3,13 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
 export async function POST(request, { params }) {
-  const attemptId = params.attemptId;
+      let awaitedParams;
+  try {
+    awaitedParams = await params;
+  } catch {
+    awaitedParams = params;
+  }
+  const attemptId = awaitedParams.attemptId;
   // Calculate score
   const responses = await prisma.questionResponse.findMany({ where: { attemptId } });
   const correct = responses.filter(r => r.isCorrect).length;

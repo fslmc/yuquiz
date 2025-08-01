@@ -3,7 +3,13 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
 export async function POST(request, { params }) {
-  const attemptId = params.attemptId;
+      let awaitedParams;
+  try {
+    awaitedParams = await params;
+  } catch {
+    awaitedParams = params;
+  }
+  const attemptId = awaitedParams.attemptId;
   const { questionId, selectedOptionId, textAnswer } = await request.json();
 
   // Fetch question to check correct answer
