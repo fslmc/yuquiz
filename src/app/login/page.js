@@ -64,6 +64,12 @@ export default function SignIn() {
         >
           {loading ? "Signing In..." : "Sign In"}
         </button>
+        <p className="mt-4 text-center text-gray-400">
+          Don't have an account?{" "}
+          <a href="/register" className="text-red-600 hover:underline font-semibold">
+            Register
+          </a>
+        </p>
       </form>
     </div>
   )
