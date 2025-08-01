@@ -1,10 +1,12 @@
+
 'use client';
 import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { PartyPopper } from 'lucide-react';
 
 export default function PlayQuiz() {
   const { quizId } = useParams();
+  const router = useRouter();
   const [attemptId, setAttemptId] = useState(null);
   const [question, setQuestion] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -41,8 +43,10 @@ export default function PlayQuiz() {
       })
       .then(data => {
         if (data.done) {
-          setDone(true);
-          setQuestion(null);
+          setTimeout(() => {
+            router.push(`/result/${attemptId}`);
+          }, 500); // 500 milliseconds = 0.5 seconds
+          return;
         } else {
           setQuestion(data);
         }
@@ -73,8 +77,10 @@ export default function PlayQuiz() {
       })
       .then(data => {
         if (data.done) {
-          setDone(true);
-          setQuestion(null);
+          setTimeout(() => {
+            router.push(`/result/${attemptId}`);
+          }, 500); // 500 milliseconds = 0.5 seconds
+          return;
         } else {
           setQuestion(data);
         }
