@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { signIn } from "next-auth/react"
+import Link from "next/link"
 
 export default function SignIn() {
   const [email, setEmail] = useState("")
