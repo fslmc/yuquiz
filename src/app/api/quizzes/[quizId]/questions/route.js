@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
+const MAX_POINTS_PER_QUESTION = 1000;
+
 // GET all questions for a quiz
 export async function GET(request, { params }) {
   let awaitedParams;
@@ -115,6 +117,20 @@ export async function POST(request, { params }) {
         { status: 400 }
       );
     }
+  }
+
+  if (points !== undefined && (typeof points !== 'number' || points <= 0)) {
+  return NextResponse.json(
+      { error: 'points must be a positive number if provided' },
+      { status: 400 }
+    );
+  }
+
+  if (points > MAX_POINTS_PER_QUESTION) {
+  return NextResponse.json(
+      { error: `Points per question cannot exceed ${MAX_POINTS_PER_QUESTION}` },
+      { status: 400 }
+    );
   }
 
   // Validate required fields and types

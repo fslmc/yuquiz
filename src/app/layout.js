@@ -3,20 +3,17 @@ export const metadata = {
   description: "Challenge your friends on the ultimate quiz game platform!",
 };
 
-import { Geist, Geist_Mono } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/ui/navbar";
 import Footer from "@/ui/footer";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight: ['400', '700'],          // specify weights if not using a variable font
+  variable: '--font-poppins',     // optional, for CSS variable usage
+  display: 'swap',                // recommended for best rendering
+})
 
 export default function RootLayout({ children }) {
   return (
@@ -25,7 +22,7 @@ export default function RootLayout({ children }) {
 
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${poppins.variable} antialiased`}
       >
       <Navbar />
 

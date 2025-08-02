@@ -44,5 +44,6 @@ export const config = {
     '/profile',
     '/profile/:path*',
     '/quizzes/new',
+    '/play/:path*',
   ],
 };
