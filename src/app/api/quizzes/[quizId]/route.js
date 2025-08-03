@@ -1,6 +1,8 @@
 // src/app/api/quizzes/[quizId]/route.js
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { authorizeQuizOwner } from '@/lib/auth-utils';
+import { auth } from '@/auth';
 
 // GET /api/quizzes/:quizId - Get quiz by ID (optionally with questions)
 export async function GET(request, { params }) {
@@ -25,6 +27,14 @@ export async function GET(request, { params }) {
 // PUT /api/quizzes/:quizId - Update quiz
 export async function PUT(request, { params }) {
   const { title, desc } = await request.json();
+  const session = await auth();
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+  const { allowed, status, message } = await authorizeQuizOwner(params.quizId, session.user.id);
+  if (!allowed) {
+    return NextResponse.json({ error: message }, { status });
+  }
   try {
     const quiz = await prisma.quiz.update({
       where: { id: params.quizId },
@@ -38,6 +48,14 @@ export async function PUT(request, { params }) {
 
 // DELETE /api/quizzes/:quizId - Delete quiz (cascade to questions/options)
 export async function DELETE(request, { params }) {
+    const session = await auth();
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+  const { allowed, status, message } = await authorizeQuizOwner(params.quizId, session.user.id);
+  if (!allowed) {
+    return NextResponse.json({ error: message }, { status });
+  }
   try {
     await prisma.quiz.delete({
       where: { id: params.quizId },

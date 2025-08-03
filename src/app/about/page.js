@@ -11,15 +11,15 @@ export default function About() {
         </h1>
 
         <p className="mb-4 text-gray-300 leading-relaxed">
-          Welcome to our yuQuiz! This website is designed to be an engaging space for you to create and play fun, interactive quizzes. Whether you&apos;re testing your knowledge on a specific topic or just looking for a good challenge, we aim to provide a seamless and enjoyable experience.
+          Welcome to yuQuiz! This website is designed to be an engaging space for you to create and play fun, interactive quizzes. Whether you&apos;re testing your knowledge on a specific topic or just looking for a good challenge, we aim to provide a seamless and enjoyable experience.
         </p>
 
         <p className="mb-4 text-gray-300 leading-relaxed">
-          This project was developed as the **Final Assignment** for the **Jabar Digital Academy (JDA) Fullstack Program**. It serves as a culmination of the skills and knowledge I&apos;ve gained throughout the program, showcasing fullstack development from the database to the user interface.
+          This project was developed as the Final Assignment for the Jabar Digital Academy (JDA) Fullstack Program.
         </p>
         
         <p className="mb-6 text-gray-300 leading-relaxed">
-          The distinctive black and red theme is inspired by my <s>wife</s> oshi, <span className="font-semibold text-red-400">如月れん (Kisaragi Ren)</span>&apos;s aesthetic
+          The distinctive(edgy) black and red theme is inspired by my <s>wife</s> oshi, <span className="font-semibold text-red-400">如月れん (Kisaragi Ren)</span>&apos;s aesthetic
         </p>
 
         <div className="mt-6 text-center">

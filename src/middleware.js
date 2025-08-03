@@ -5,6 +5,7 @@ import { NextResponse } from 'next/server';
 const protectedRoutes = [
   '/profile',
   '/quizzes/new',
+  '/play'
 ];
 
 // Helper to check if the pathname is protected
@@ -44,6 +45,7 @@ export const config = {
     '/profile',
     '/profile/:path*',
     '/quizzes/new',
+    '/play',
     '/play/:path*',
   ],
 };
