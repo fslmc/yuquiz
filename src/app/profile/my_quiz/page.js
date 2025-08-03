@@ -4,12 +4,10 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useSession } from '@/app/hooks/useSession';
 
-
 export default function MyQuizList() {
   const [quizzes, setQuizzes] = useState([]);
   const [loading, setLoading] = useState(true);
   const { session } = useSession();
-
 
   useEffect(() => {
     fetch('/api/quizzes/my')
@@ -24,6 +22,25 @@ export default function MyQuizList() {
         setLoading(false);
       });
   }, []);
+
+  const handleDelete = async (quizId) => {
+    if (!confirm('Are you sure you want to delete this quiz?')) {
+      return;
+    }
+    try {
+      const response = await fetch(`/api/quizzes/${quizId}`, {
+        method: 'DELETE',
+      });
+      if (response.ok) {
+        setQuizzes(prevQuizzes => prevQuizzes.filter(quiz => quiz.id !== quizId));
+      } else {
+        const errorData = await response.json();
+        alert('Failed to delete quiz: ' + (errorData.error || 'Unknown error'));
+      }
+    } catch (error) {
+      alert('Failed to delete quiz: ' + error.message);
+    }
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -55,9 +72,18 @@ export default function MyQuizList() {
                   <div className="font-semibold text-lg">{quiz.title}</div>
                   <div className="text-gray-400">{quiz.desc}</div>
                 </div>
-                <Link href={`/profile/my_quiz/${quiz.id}`} className="bg-red-500 hover:bg-red-700 px-3 py-1 rounded text-white">
-                  Edit
-                </Link>
+                <div className="flex space-x-2">
+                  <Link href={`/profile/my_quiz/${quiz.id}`} className="bg-red-500 hover:bg-red-700 px-3 py-1 rounded text-white">
+                    Edit
+                  </Link>
+                  <button
+                    onClick={() => handleDelete(quiz.id)}
+                    className="bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded text-white"
+                    aria-label={`Delete quiz ${quiz.title}`}
+                  >
+                    Delete
+                  </button>
+                </div>
               </li>
             ))
           )}
