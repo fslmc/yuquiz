@@ -36,10 +36,28 @@ export default function CreateQuiz() {
     const regex = /[0-9\b]/;
     // Check if the key is a single digit or one of the allowed keys
     if (!regex.test(e.key) && e.key.length === 1 &&
-        e.key !== 'Backspace' && e.key !== 'Delete' && 
-        e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') {
+      e.key !== 'Backspace' && e.key !== 'Delete' &&
+      e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') {
       e.preventDefault();
     }
+  };
+
+  const removeQuestion = (qi) => setQuestions(qs => qs.filter((_, idx) => idx !== qi));
+  const removeOption = (qi, oi) => {
+    setQuestions(qs =>
+      qs.map((q, idx) =>
+        idx === qi
+          ? {
+            ...q,
+            options: q.options.filter((_, i) => i !== oi),
+            // Adjust correct index if needed
+            correct: q.correct >= oi
+              ? Math.max(0, q.correct - 1)
+              : q.correct
+          }
+          : q
+      )
+    );
   };
 
   const handleSubmit = async (e) => {
@@ -103,13 +121,25 @@ export default function CreateQuiz() {
             <h2 className="text-xl font-bold text-red-400 mb-2">Questions</h2>
             {questions.map((q, qi) => (
               <div key={qi} className="bg-gray-900 rounded p-4 mb-4">
-                <input
-                  value={q.text}
-                  onChange={e => updateQuestion(qi, 'text', e.target.value)}
-                  placeholder="Question text"
-                  className="w-full p-2 rounded bg-gray-800 text-white mb-2"
-                  required
-                />
+                <div className="flex justify-between items-center mb-2">
+                  <input
+                    value={q.text}
+                    onChange={e => updateQuestion(qi, 'text', e.target.value)}
+                    placeholder="Question text"
+                    className="w-full p-2 rounded bg-gray-800 text-white"
+                    required
+                  />
+                  {questions.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeQuestion(qi)}
+                      className="ml-2 text-red-400 hover:text-red-600 text-sm"
+                    >
+                      Remove
+                    </button>
+                  )}
+                </div>
+
                 {/* New points input field */}
                 <div className="mb-2">
                   <label className="block text-sm mb-1">Points</label>
@@ -124,6 +154,7 @@ export default function CreateQuiz() {
                     placeholder='Max 1000 Points'
                     required
                   />
+
                 </div>
                 <div className="space-y-2">
                   {q.options.map((opt, oi) => (
@@ -142,6 +173,17 @@ export default function CreateQuiz() {
                         className="p-2 rounded bg-gray-800 text-white flex-1"
                         required
                       />
+                      {/* Remove Option Button */}
+                      {q.options.length > 2 && (
+                        <button
+                          type="button"
+                          onClick={() => removeOption(qi, oi)}
+                          className="bg-gray-700 hover:bg-red-600 text-white px-2 py-1 rounded"
+                          title="Remove this option"
+                        >
+                          &times;
+                        </button>
+                      )}
                     </div>
                   ))}
                   <button type="button" onClick={() => addOption(qi)} className="text-red-400 hover:text-red-600 text-sm">+ Add Option</button>
@@ -154,7 +196,7 @@ export default function CreateQuiz() {
             <button type="submit" className="bg-red-600 hover:bg-red-700 px-6 py-2 rounded text-white font-bold">Save Quiz</button>
             <Link href="/quizzes" className="bg-red-600 hover:bg-red-700 px-6 py-2 rounded text-white font-bold">
               Back
-            </Link> 
+            </Link>
           </div>
         </form>
       </div>

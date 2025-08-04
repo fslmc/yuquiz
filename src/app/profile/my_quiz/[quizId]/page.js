@@ -216,7 +216,7 @@ export default function EditQuiz() {
           </div>
           <div className='space-x-1'>
             <button type="submit" className="bg-red-600 hover:bg-red-700 px-6 py-2 rounded text-white font-bold">Save Changes</button>
-            <Link href="/profile/my-quiz" className="bg-gray-700 hover:bg-gray-600 px-6 py-2 rounded text-white font-bold">
+            <Link href="/profile/my_quiz" className="bg-gray-700 hover:bg-gray-600 px-6 py-2 rounded text-white font-bold">
               Cancel
             </Link>
           </div>
