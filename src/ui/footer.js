@@ -1,15 +1,15 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Footer() {
-    const [year, setYear] = useState(null);
+  const [year, setYear] = useState(null);
 
-    useState(() => {
-        setYear(new Date().getFullYear());
-    }, []);
+  useEffect(() => {
+    setYear(new Date().getFullYear());
+  }, []);
 
   return (
-    <footer className="w-full py-4 bg-black border-t border-red-600 text-center text-gray-400 text-sm">
+    <footer className="w-full py-4 bg-primary border-t border-accent text-center text-neutral-light text-sm">
       &copy; {year || ""} yuQuiz. All rights reserved.
     </footer>
   );

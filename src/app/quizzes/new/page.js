@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import { useSession } from '@/app/hooks/useSession';
 import Link from 'next/link';
 
-
 export default function CreateQuiz() {
   const router = useRouter()
   const [title, setTitle] = useState('')
@@ -32,12 +31,8 @@ export default function CreateQuiz() {
 
   // Event handler to prevent non-numeric input
   const handleKeyDown = (e) => {
-    // Allow digits, backspace, delete, and arrow keys
-    const regex = /[0-9\b]/;
-    // Check if the key is a single digit or one of the allowed keys
-    if (!regex.test(e.key) && e.key.length === 1 &&
-      e.key !== 'Backspace' && e.key !== 'Delete' &&
-      e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') {
+    const regex = /[0-9]|Backspace/;
+    if (!regex.test(e.key)) {
       e.preventDefault();
     }
   };
@@ -50,7 +45,6 @@ export default function CreateQuiz() {
           ? {
             ...q,
             options: q.options.filter((_, i) => i !== oi),
-            // Adjust correct index if needed
             correct: q.correct >= oi
               ? Math.max(0, q.correct - 1)
               : q.correct
@@ -104,98 +98,177 @@ export default function CreateQuiz() {
     router.push(`/quizzes`)
   }
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-highlight mx-auto mb-4"></div>
+          <p className="text-xl text-foreground">Loading editor...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-black text-white">
-      <div className="max-w-2xl mx-auto py-8">
-        <h1 className="text-3xl font-bold text-red-500 mb-6">Create Quiz</h1>
+    <div className="min-h-screen bg-background text-foreground">
+      <div className="max-w-2xl mx-auto py-8 px-4">
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold text-highlight mb-2">Create Quiz</h1>
+          <p className="text-neutral-light-alt">
+            Build your custom quiz with multiple questions and options
+          </p>
+        </div>
+        
         <form onSubmit={handleSubmit} className="space-y-8">
-          <div>
-            <label className="block mb-1">Title</label>
-            <input value={title} onChange={e => setTitle(e.target.value)} className="w-full p-2 rounded bg-gray-800 text-white" required />
+          <div className="space-y-4">
+            <div>
+              <label className="block text-neutral-light-alt mb-2 font-medium">Quiz Title</label>
+              <input 
+                value={title} 
+                onChange={e => setTitle(e.target.value)} 
+                className="w-full p-3 rounded-lg bg-primary border border-accent focus:border-highlight focus:ring-2 focus:ring-accent focus:ring-opacity-50 transition-colors"
+                placeholder="Enter quiz title"
+                required 
+              />
+            </div>
+            
+            <div>
+              <label className="block text-neutral-light-alt mb-2 font-medium">Description</label>
+              <textarea 
+                value={desc} 
+                onChange={e => setDesc(e.target.value)} 
+                className="w-full p-3 rounded-lg bg-primary border border-accent focus:border-highlight focus:ring-2 focus:ring-accent focus:ring-opacity-50 transition-colors min-h-[100px]"
+                placeholder="Describe your quiz"
+              />
+            </div>
           </div>
-          <div>
-            <label className="block mb-1">Description</label>
-            <textarea value={desc} onChange={e => setDesc(e.target.value)} className="w-full p-2 rounded bg-gray-800 text-white" />
-          </div>
-          <div>
-            <h2 className="text-xl font-bold text-red-400 mb-2">Questions</h2>
+          
+          <div className="border-t border-accent pt-6">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-bold text-highlight">Questions</h2>
+              <button 
+                type="button" 
+                onClick={addQuestion}
+                className="bg-accent hover:bg-accent-alt text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
+                </svg>
+                Add Question
+              </button>
+            </div>
+            
             {questions.map((q, qi) => (
-              <div key={qi} className="bg-gray-900 rounded p-4 mb-4">
-                <div className="flex justify-between items-center mb-2">
-                  <input
-                    value={q.text}
-                    onChange={e => updateQuestion(qi, 'text', e.target.value)}
-                    placeholder="Question text"
-                    className="w-full p-2 rounded bg-gray-800 text-white"
-                    required
-                  />
+              <div key={qi} className="bg-primary rounded-xl border border-accent p-5 mb-6 shadow-md">
+                <div className="flex justify-between items-start mb-4">
+                  <div className="flex-1">
+                    <label className="block text-neutral-light-alt mb-2 font-medium">
+                      Question {qi + 1}
+                    </label>
+                    <input
+                      value={q.text}
+                      onChange={e => updateQuestion(qi, 'text', e.target.value)}
+                      placeholder="Enter your question"
+                      className="w-full p-3 rounded-lg bg-background border border-accent focus:border-highlight focus:ring-2 focus:ring-accent focus:ring-opacity-50 transition-colors"
+                      required
+                    />
+                  </div>
+                  
                   {questions.length > 1 && (
                     <button
                       type="button"
                       onClick={() => removeQuestion(qi)}
-                      className="ml-2 text-red-400 hover:text-red-600 text-sm"
+                      className="ml-3 text-highlight hover:text-highlight-alt p-2 rounded-full hover:bg-accent hover:bg-opacity-20 transition-colors"
+                      title="Remove question"
                     >
-                      Remove
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                      </svg>
                     </button>
                   )}
                 </div>
 
-                {/* New points input field */}
-                <div className="mb-2">
-                  <label className="block text-sm mb-1">Points</label>
+                <div className="mb-4">
+                  <label className="block text-neutral-light-alt mb-2 font-medium">
+                    Points
+                  </label>
                   <input
-                    type="text" // Changed to text to handle keydown validation
+                    type="text"
                     value={q.points}
                     onChange={e => updateQuestion(qi, 'points', e.target.value)}
                     onKeyDown={handleKeyDown}
-                    className="w-full p-2 rounded bg-gray-800 text-white"
+                    className="w-24 p-2 rounded-lg bg-background border border-accent focus:border-highlight focus:ring-2 focus:ring-accent focus:ring-opacity-50 transition-colors"
                     pattern="[0-9]*"
                     inputMode="numeric"
-                    placeholder='Max 1000 Points'
+                    placeholder="max 1000"
                     required
                   />
-
                 </div>
-                <div className="space-y-2">
-                  {q.options.map((opt, oi) => (
-                    <div key={oi} className="flex items-center space-x-2">
-                      <input
-                        type="radio"
-                        name={`correct_${qi}`}
-                        checked={q.correct == oi}
-                        onChange={() => updateQuestion(qi, 'correct', oi)}
-                        className="accent-red-500"
-                      />
-                      <input
-                        value={opt}
-                        onChange={e => updateOption(qi, oi, e.target.value)}
-                        placeholder={`Option ${oi + 1}`}
-                        className="p-2 rounded bg-gray-800 text-white flex-1"
-                        required
-                      />
-                      {/* Remove Option Button */}
-                      {q.options.length > 2 && (
-                        <button
-                          type="button"
-                          onClick={() => removeOption(qi, oi)}
-                          className="bg-gray-700 hover:bg-red-600 text-white px-2 py-1 rounded"
-                          title="Remove this option"
-                        >
-                          &times;
-                        </button>
-                      )}
-                    </div>
-                  ))}
-                  <button type="button" onClick={() => addOption(qi)} className="text-red-400 hover:text-red-600 text-sm">+ Add Option</button>
+                
+                <div className="space-y-3">
+                  <h3 className="text-neutral-light-alt font-medium">Options</h3>
+                  <div className="space-y-3">
+                    {q.options.map((opt, oi) => (
+                      <div key={oi} className="flex items-center space-x-3">
+                        <input
+                          type="radio"
+                          name={`correct_${qi}`}
+                          checked={q.correct == oi}
+                          onChange={() => updateQuestion(qi, 'correct', oi)}
+                          className="h-5 w-5 text-accent focus:ring-accent"
+                          style={{ accentColor: 'var(--color-accent)' }}
+                        />
+                        <input
+                          value={opt}
+                          onChange={e => updateOption(qi, oi, e.target.value)}
+                          placeholder={`Option ${oi + 1}`}
+                          className="flex-1 p-3 rounded-lg bg-background border border-accent focus:border-highlight focus:ring-2 focus:ring-accent focus:ring-opacity-50 transition-colors"
+                          required
+                        />
+                        
+                        {q.options.length > 2 && (
+                          <button
+                            type="button"
+                            onClick={() => removeOption(qi, oi)}
+                            className="text-highlight hover:text-highlight-alt p-2 rounded-full hover:bg-accent hover:bg-opacity-20 transition-colors"
+                            title="Remove option"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                              <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                            </svg>
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  
+                  <button 
+                    type="button" 
+                    onClick={() => addOption(qi)}
+                    className="text-accent hover:text-accent-alt text-sm font-medium flex items-center gap-1 mt-2"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
+                    </svg>
+                    Add Option
+                  </button>
                 </div>
               </div>
             ))}
-            <button type="button" onClick={addQuestion} className="bg-red-700 hover:bg-red-800 px-4 py-2 rounded text-white">+ Add Question</button>
           </div>
-          <div className='space-x-1'>
-            <button type="submit" className="bg-red-600 hover:bg-red-700 px-6 py-2 rounded text-white font-bold">Save Quiz</button>
-            <Link href="/quizzes" className="bg-red-600 hover:bg-red-700 px-6 py-2 rounded text-white font-bold">
-              Back
+          
+          <div className="flex flex-wrap gap-3 pt-4 border-t border-accent">
+            <button 
+              type="submit" 
+              className="bg-accent hover:bg-accent-alt px-6 py-3 rounded-lg text-white font-bold flex-1 min-w-[150px] transition-colors"
+            >
+              Save Quiz
+            </button>
+            <Link 
+              href="/quizzes" 
+              className="bg-primary hover:bg-secondary border border-accent px-6 py-3 rounded-lg text-foreground font-bold text-center flex-1 min-w-[150px] transition-colors"
+            >
+              Cancel
             </Link>
           </div>
         </form>
