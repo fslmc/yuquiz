@@ -83,7 +83,7 @@ export default function MyQuizList() {
           <div>
             <h1 className="text-3xl font-bold text-highlight mb-2">My Quizzes</h1>
             <p className="text-neutral-light-alt">
-              Manage quizzes you've created
+              Manage quizzes you&apos;ve created
             </p>
           </div>
           <Link 
@@ -100,7 +100,7 @@ export default function MyQuizList() {
         {quizzes.length === 0 ? (
           <div className="bg-primary rounded-xl border border-accent p-8 text-center">
             <h2 className="text-2xl font-bold text-highlight mb-4">No Quizzes Created Yet</h2>
-            <p className="mb-6 text-neutral-light">You haven't created any quizzes yet. Start by creating your first quiz!</p>
+            <p className="mb-6 text-neutral-light">You haven&apos;t created any quizzes yet. Start by creating your first quiz!</p>
             <Link 
               href="/quizzes/new" 
               className="bg-accent hover:bg-accent-alt text-white px-6 py-3 rounded-lg font-semibold inline-flex items-center gap-2"
