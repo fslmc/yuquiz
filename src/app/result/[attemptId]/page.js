@@ -65,6 +65,12 @@ export default function QuizResult() {
       >
         Back to Quizzes
       </button>
+            <button
+        className="mt-8 bg-red-600 hover:bg-red-700 px-6 py-2 rounded text-white font-bold"
+        onClick={() => router.push('/result')}
+      >
+        Back to Results
+      </button>
     </div>
   );
 }
