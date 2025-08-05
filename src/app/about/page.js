@@ -31,14 +31,14 @@ export default function About() {
           </p>
 
           <p className="leading-relaxed">
-            The distinctive black and red theme is inspired by my oshi,{' '}
+            The distinctive black and red theme is inspired by my <s>wife</s> oshi,&nbsp; 
             <span
               className="font-semibold text-highlight cursor-pointer hover:underline hover:text-highlight-alt transition-colors"
               onClick={toggleModal}
             >
               如月れん (Kisaragi Ren)
             </span>
-            's aesthetic.
+            &apos;s aesthetic.
           </p>
 
           <div className="pt-4 border-t border-accent mt-4">
