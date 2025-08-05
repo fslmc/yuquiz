@@ -69,7 +69,7 @@ export default function HistoryPage() {
         {attempts.length === 0 ? (
           <div className="bg-primary rounded-lg border border-accent p-8 text-center">
             <h2 className="text-2xl font-semibold text-highlight mb-4">No Quiz Attempts Found</h2>
-            <p className="mb-6">You haven't completed any quizzes yet.</p>
+            <p className="mb-6">You haven&apos;t completed any quizzes yet.</p>
             <Link 
               href="/quizzes" 
               className="bg-accent hover:bg-accent-alt text-white px-6 py-2 rounded-lg font-semibold inline-block"
